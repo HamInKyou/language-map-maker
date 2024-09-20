@@ -1,3 +1,4 @@
+# GitHub Pages에 정적 콘텐츠를 배포하기 위한 간단한 워크플로우
 name: Deploy static content to Pages
 
 on:
@@ -31,9 +32,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate # pnpm을 설치하고 활성화
+        run: npm install -g pnpm
 
       - name: Install dependencies
         run: pnpm install
