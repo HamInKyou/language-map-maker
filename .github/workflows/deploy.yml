@@ -1,11 +1,8 @@
 name: Deploy static content to Pages
 
 on:
-  # 기본 브랜치에 대한 푸시 이벤트 발생 시 실행
   push:
     branches: ['main']
-
-  # Actions 탭에서 수동으로 워크플로우를 실행할 수 있도록 구성
   workflow_dispatch:
 
 permissions:
@@ -31,13 +28,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm' # 여기서 pnpm으로 캐시 설정
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate # pnpm을 설치하고 활성화
 
       - name: Install dependencies
-        run: pnpm install # npm 대신 pnpm 사용
+        run: pnpm install
 
       - name: Build
-        run: pnpm run build # 빌드 명령어도 pnpm으로 변경
+        run: pnpm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -45,7 +47,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './dist' # Vite 빌드 디렉토리
+          path: './dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
