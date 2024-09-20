@@ -1,34 +1,52 @@
-name: Deploy Vite App to GitHub Pages
+name: Deploy static content to Pages
 
 on:
+  # 기본 브랜치에 대한 푸시 이벤트 발생 시 실행
   push:
-    branches:
-      - main
+    branches: ['main']
+
+  # Actions 탭에서 수동으로 워크플로우를 실행할 수 있도록 구성
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
 
 jobs:
-  build-deploy:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
+          node-version: 20
+          cache: 'pnpm' # 여기서 pnpm으로 캐시 설정
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install # npm 대신 pnpm 사용
 
-      - name: Build project
-        run: pnpm run build
+      - name: Build
+        run: pnpm run build # 빌드 명령어도 pnpm으로 변경
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './dist' # Vite 빌드 디렉토리
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+        id: deployment
+        uses: actions/deploy-pages@v4
