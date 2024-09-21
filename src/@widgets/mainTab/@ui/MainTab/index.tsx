@@ -22,7 +22,10 @@ function MainTab({ currentContent, onChange }: Props) {
     <div className={cx('main-tab')}>
       {Object.keys(MAIN_TAB_CONTENT).map(tab => {
         return (
-          <button key={tab} className={cx('tab-item', { 'is-active': currentContent === tab })} onClick={() => handleTabClick(tab as MainTabContent)}>
+          <button
+            key={tab}
+            className={cx('tab-item', { 'is-active': currentContent === tab })}
+            onClick={() => handleTabClick(tab as MainTabContent)}>
             {tab}
           </button>
         );
