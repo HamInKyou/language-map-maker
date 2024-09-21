@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './styles/normalize.scss';
-import MainPage from '../@pages/main';
+import MainPage from '@pages/main';
 
 const router = createBrowserRouter(
   [
